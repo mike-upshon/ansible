@@ -4,9 +4,4 @@
   become: true
   tasks:
     - name: update apt packages
-      apt:
-        upgrade: yes
-        update_cache: yes
-      until: apt_status is success
-      delay: 6
-      retries: 10
+      ansible.builtin.shell: sudo apt update && sudo apt upgrade -y
