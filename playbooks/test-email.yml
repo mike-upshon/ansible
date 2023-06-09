@@ -1,0 +1,8 @@
+---
+- hosts: all
+
+  tasks:
+    - name: Testing mail to root
+      community.general.mail:
+        subject: {{ ansible_hostname }} Test.
+      delegate_to: localhost
