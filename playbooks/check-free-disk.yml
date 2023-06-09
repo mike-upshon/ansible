@@ -3,13 +3,22 @@
   hosts: all
   vars:
      mount_all: []
-  tasks:
+  gather_facts: yes
+    tasks:
+      - name: Collect Hardware Facts
+        setup:
+          gather_subset:
+            - 'hardware'
 
-    - set_fact:
-        mount_all: "{{ mount_all + [{'host':ansible_host,'dev':item.device,'mount':item.mount,'free':(((item.size_available/1024)/1024)/1024)|round(2,'common'),'total':(((item.size_total/1024)/1024)/1024)|round(2,'common')}] }}"
-      when: (item.size_total - item.size_available) > (item.size_total|float * 0.5)
-      with_items: "{{ ansible_mounts | list }}"
-
-    - name: Disk Usage > 50%
-      debug:
-         msg: "{{ mount_all }} "
+      - name: Test for available disk space
+        setup: filter=ansible_mounts
+        
+      - name: Ensure that free space on the tested volume is greater than 50%
+        assert:
+          that:
+            - mount.size_available > mount.size_total|float * 0.5
+          msg: Disk space has reached 50% threshold
+        vars:
+          mount: "{{ ansible_mounts | selectattr('mount','equalto',item.mount) | list | first }}"
+        with_items:
+          - "{{ ansible_mounts }}"
