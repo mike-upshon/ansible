@@ -5,3 +5,4 @@
     - name: Testing mail to root
       mail:
         subject: '{{ ansible_hostname }} Test.'
+      delegate_to: localhost
