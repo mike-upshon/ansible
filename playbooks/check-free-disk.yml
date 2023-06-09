@@ -1,5 +1,6 @@
 ---
 - name: Check VM Disks
+  hosts: all
   gather_facts: yes
   tasks:
     - name: Collect Hardware Facts
