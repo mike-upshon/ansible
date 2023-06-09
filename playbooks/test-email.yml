@@ -3,6 +3,5 @@
 
   tasks:
     - name: Testing mail to root
-      community.general.mail:
+      mail:
         subject: "{{ ansible_hostname }} Test.""
-      delegate_to: localhost
