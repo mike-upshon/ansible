@@ -10,3 +10,9 @@
       tags: datecmd
 
     - debug: msg="{{datecmd.stdout}}"
+
+    - name: email
+      mail:
+        subject: 'Test.'
+        body: '{{datecmd.stdout}}'
+      delegate_to: localhost    
